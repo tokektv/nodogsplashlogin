@@ -5,10 +5,11 @@
 # ===============================
 
 # Konfigurasi URL GitHub
-GITHUB_RAW="https://raw.githubusercontent.com/tokektv/nodogsplash/refs/heads/main/"
+GITHUB_RAW="https://raw.githubusercontent.com/tokektv/nodogsplashlogin/refs/heads/main/"
 SPLASH_URL="$GITHUB_RAW/splash.html"
 CONFIG_URL="$GITHUB_RAW/nodogsplash"
-MACLIST_URL="$GITHUB_RAW/maclist.txt"
+VALIDATE_URL="$GITHUB_RAW/voucher/validate.sh"
+VOUCHER_URL="$GITHUB_RAW/voucher/voucher.txt"
 INIT_URL="$GITHUB_RAW/init.d/nodogsplash"
 FALLBACK_MODE=0
 
@@ -18,6 +19,7 @@ opkg install vsftpd nodogsplash wget
 
 echo "[2] DOWNLOAD FILE DARI GITHUB"
 mkdir -p /etc/nodogsplash/htdocs
+mkdir -p /etc/nodogsplash/voucher
 
 # Fungsi untuk menangani download
 download_file() {
@@ -78,12 +80,19 @@ EOL
   FALLBACK_MODE=1
 fi
 
-# Download TRUSHTED MAC
-mkdir -p /etc/nodogsplash
-if ! download_file "$MACLIST_URL" "/etc/nodogsplash/trusted_macs.txt"; then
-  cat > /etc/nodogsplash/trusted_macs.txt << 'EOL'
-AA:BB:CC:DD:EE:FF
-11:22:33:44:55:66
+# Download Validasi voucher
+
+mkdir -p /etc/nodogsplash/voucher
+if ! download_file "$VALIDATE_URL" "/etc/nodogsplash/voucher/validate.sh"; then
+  cat > /etc/nodogsplash/voucher/validate.sh << 'EOL'
+
+EOL
+  FALLBACK_MODE=1
+fi
+
+if ! download_file "$VOUCHER_URL" "/etc/nodogsplash/voucher/voucher.txt"; then
+  cat > /etc/nodogsplash/voucher/voucher.txt << 'EOL'
+
 EOL
   FALLBACK_MODE=1
 fi
@@ -91,6 +100,7 @@ fi
 # Set permission
 chown nobody:nogroup /etc/nodogsplash/htdocs/splash.html
 chmod 644 /etc/nodogsplash/htdocs/splash.html
+chmod 644 /etc/nodogsplash/voucher/validate.sh
 
 echo "[4] KONFIGURASI FIREWALL UNTUK WAN/WWAN"
 # Backup firewall
@@ -112,7 +122,7 @@ uci set firewall.@rule[-1].dest_port='21 22 80 443'
 uci set firewall.@rule[-1].target='ACCEPT'
 
 # Jadwalkan update tiap 6 jam
-(crontab -l 2>/dev/null; echo "0 */6 * * * wget -O /etc/nodogsplash/trusted_macs.txt https://raw.githubusercontent.com/tokektv/nodogsplash/refs/heads/main/maclist.txt
+(crontab -l 2>/dev/null; echo "0 */6 * * * wget -O /etc/nodogsplash/voucher/voucher.txt https://raw.githubusercontent.com/tokektv/nodogsplash/refs/heads/main/voucher/voucher.txt
 ") | crontab -
 
 echo "[5] RESTART SERVICE"
@@ -129,14 +139,6 @@ Fitur yang aktif:
 1. NoDogSplash dengan:
    - splash.html: $(if [ $FALLBACK_MODE -eq 0 ]; then echo "GitHub"; else echo "Lokal"; fi)
    - config: $(if [ $FALLBACK_MODE -eq 0 ]; then echo "GitHub"; else echo "Lokal"; fi)
-2. MAC TRUSHTED MAC:
-   - Sumber: $(if [ $FALLBACK_MODE -eq 0 ]; then echo "GitHub"; else echo "Lokal"; fi)
-   - Auto-update tiap 6 jam
-3. Firewall:
-   - Port 22,80,443 terbuka untuk WAN/WWAN
-
-Daftar MAC yang diizinkan:
-$(cat /etc/nodogsplash/trusted_macs.txt)
 
 Akses hotspot:
 - http://$(uci get network.lan.ipaddr):2050
