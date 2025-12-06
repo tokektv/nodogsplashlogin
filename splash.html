@@ -1,1 +1,143 @@
 
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Linux Network Auth</title>
+    <style>
+        :root {
+            --terminal-bg: #1e1e1e;
+            --terminal-text: #f0f0f0;
+            --terminal-green: #4E9A06;
+            --terminal-blue: #3465A4;
+            --terminal-yellow: #C4A000;
+            --terminal-red: #CC0000;
+            --font-mono: 'Courier New', monospace;
+        }
+        body {
+            font-family: var(--font-mono);
+            background-color: var(--terminal-bg);
+            color: var(--terminal-text);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            line-height: 1.6;
+        }
+        .terminal {
+            width: 90%;
+            max-width: 700px;
+            border: 1px solid #333;
+            border-radius: 5px;
+            overflow: hidden;
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+        }
+        .terminal-header {
+            background: linear-gradient(#3c3c3c, #2a2a2a);
+            padding: 8px 15px;
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid #111;
+        }
+        .terminal-btn {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+        .btn-red { background: var(--terminal-red); }
+        .btn-yellow { background: var(--terminal-yellow); }
+        .btn-green { background: var(--terminal-green); }
+        .terminal-title {
+            flex-grow: 1;
+            text-align: center;
+            font-size: 0.9rem;
+            color: #aaa;
+        }
+        .terminal-body {
+            padding: 20px;
+            height: 400px;
+            overflow-y: auto;
+        }
+        .prompt {
+            color: var(--terminal-green);
+        }
+        .command {
+            color: var(--terminal-blue);
+        }
+        .text-yellow {
+            color: var(--terminal-yellow);
+        }
+        .text-red {
+            color: var(--terminal-red);
+        }
+        .cursor {
+            display: inline-block;
+            width: 10px;
+            height: 16px;
+            background: var(--terminal-text);
+            animation: blink 1s infinite;
+            vertical-align: middle;
+            margin-left: 3px;
+        }
+        @keyframes blink {
+            50% { opacity: 0; }
+        }
+        .network-info {
+            margin: 25px 0;
+            padding-left: 15px;
+            border-left: 2px solid #333;
+        }
+        .countdown {
+            margin-top: 30px;
+            color: #aaa;
+        }
+        .highlight {
+            color: var(--terminal-green);
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="terminal">
+        <div class="terminal-header">
+            <div class="terminal-btn btn-red"></div>
+            <div class="terminal-btn btn-yellow"></div>
+            <div class="terminal-btn btn-green"></div>
+            <div class="terminal-title">user@RtRWNet ~</div>
+        </div>
+        
+        <div class="terminal-body">
+            <div class="prompt">user@RtRWNet</div>
+            <span class="text-yellow">~$</span> 
+            <span class="command">sudo connect --network</span>
+                 
+            <p class="text-yellow">PERATURAN PENGGUNAAN</p>
+            <ul>
+                <li><span class="text-red">*</span> DILARANG KERAS MENGAKSES SITUS JUDOL</li>
+                <li><span class="text-red">*</span> DILARANG KERAS MEMBUKA SITUS PORNO</li>
+                <li><span class="text-red">*</span> MEMBAYAR TAGIHAN TEPAT WAKTU</li>
+                <li><span class="text-red">*</span> Hubungi Admin Jika Terjadi Kendala</li>
+            </ul>
+            
+<form method='GET' action='$authaction'>
+<input type='hidden' name='tok' value='$tok'>
+<input type='hidden' name='redir' value='$redir'>
+username: <input type='text' name='username' value='' size='12' maxlength='12'>
+<br>
+password: <input type='password' name='password' value='' size='12' maxlength='10'>
+<br>
+<input type='submit' value='Enter'>
+</form>
+
+<!-- Tambahkan di footer atau di rules section -->
+<div class="line">
+    <span class="prompt">[INFO]</span> Check session status: 
+    <a href="/status.html" style="color: var(--command);">http://192.168.1.1/status.html</a>
+</div>
+
+</body>
+</html>
